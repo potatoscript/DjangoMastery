@@ -2,12 +2,12 @@
 
 ## Table of Contents
 
-- [A. Create Django Project](#a.-create-django-project)
-- [B. Version Control](#b.-version-control)
-- [C. Build the App](#c.-build-the-app)
-- [D. Create GitHub Action](#d.-create-github-action)
+- [A. Create Django Project](#a-create-django-project)
+- [B. Version Control](#b-version-control)
+- [C. Build the App](#c-build-the-app)
+- [D. Create GitHub Action](#d-create-github-action)
 
-## A. Create Django Project
+## A Create Django Project
 [back](#table-of-contents)
 
 Follow the steps below to build the Django project:
@@ -135,7 +135,7 @@ Follow the steps below to build the Django project:
 
     If you see the Django start screen, it means everything works and we are good to go.
 
-## B. Version Control
+## B Version Control
 [back](#table-of-contents)
 
 ### Set Up Version Control with Git and GitHub
@@ -166,7 +166,7 @@ Follow the steps below to build the Django project:
       git push -u origin main
       ```
 
-## C. Build the App
+## C Build the App
 [back](#table-of-contents)
 
 ### Setting Up `urls.py` in Project Directory
@@ -208,7 +208,7 @@ Follow the steps below to build the Django project:
 
 By following these steps, you will have a Django project set up with MySQL as the database, version control configured with Git and GitHub, and a basic application structure ready for further development.
 
-## D. Create GitHub Action
+## D Create GitHub Action
 [back](#table-of-contents)
 
 ### 1. Create a GitHub Workflow File
