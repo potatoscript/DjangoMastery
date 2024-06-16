@@ -2,10 +2,10 @@
 
 ## Table of Contents
 
-- [A. Create Django Project](#A.-Create-Django-Project)
-- [B. Version Control](#B.-Version-Control)
-- [C. Build the App](#C.-Build-the-App)
-- [D. Create GitHub Action](#D.-Create-GitHub-Action)
+- [A. Create Django Project](#a.-create-django-project)
+- [B. Version Control](#b.-version-control)
+- [C. Build the App](#c.-build-the-app)
+- [D. Create GitHub Action](#d.-create-github-action)
 
 ## A. Create Django Project
 [back](#table-of-contents)
