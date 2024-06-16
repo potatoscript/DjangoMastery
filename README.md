@@ -1,6 +1,14 @@
 # Django Potato Project
 
-## A. Create Django Project
+## Table of Contents
+
+- [A. Create Django Project](#a-create-django-project)
+- [B. Version Control](#b-version-control)
+- [C. Build the App](#c-build-the-app)
+- [D. Create GitHub Action](#d-create-github-action)
+
+## A Create Django Project
+[back](#table-of-contents)
 
 Follow the steps below to build the Django project:
 
@@ -127,7 +135,8 @@ Follow the steps below to build the Django project:
 
     If you see the Django start screen, it means everything works and we are good to go.
 
-## B. Version Control
+## B Version Control
+[back](#table-of-contents)
 
 ### Set Up Version Control with Git and GitHub
 
@@ -157,7 +166,8 @@ Follow the steps below to build the Django project:
       git push -u origin main
       ```
 
-## C. Build the App
+## C Build the App
+[back](#table-of-contents)
 
 ### Setting Up `urls.py` in Project Directory
 
@@ -197,3 +207,101 @@ Follow the steps below to build the Django project:
       ```
 
 By following these steps, you will have a Django project set up with MySQL as the database, version control configured with Git and GitHub, and a basic application structure ready for further development.
+
+## D Create GitHub Action
+[back](#table-of-contents)
+
+### 1. Create a GitHub Workflow File
+
+1. Navigate to your project directory and create a `.github` directory with a subdirectory `workflows`.
+   ```bash
+   mkdir -p .github/workflows
+   ```
+
+2. Inside the `workflows` directory, create a file named `django-ci.yml`.
+
+### 2. Configure the Workflow File
+
+Open the `django-ci.yml` file and add the following configuration:
+
+```yaml
+name: Django CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: potato
+          MYSQL_DATABASE: potato
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m venv potatovm
+        source potatovm/bin/activate
+        pip install django mysqlclient
+
+    - name: Set up Django
+      run: |
+        source potatovm/bin/activate
+        python manage.py migrate
+        echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'adminpass')" | python manage.py shell
+
+    - name: Run tests
+      run: |
+        source potatovm/bin/activate
+        python manage.py runserver &
+        sleep 10
+        curl -sSf localhost:8000 | grep "Hello Potato"
+```
+
+### Explanation of the Workflow
+
+1. **Workflow Triggering**: The workflow triggers on push or pull request events to the `main` branch.
+
+2. **Job Definition**: The job runs on the latest Ubuntu runner.
+
+3. **MySQL Service**: Sets up a MySQL service container with the database `potato` and the root password `potato`.
+
+4. **Steps**:
+   - **Checkout code**: Checks out the code from the repository.
+   - **Set up Python**: Sets up a Python environment.
+   - **Install dependencies**: Installs the required Python packages inside a virtual environment.
+   - **Set up Django**: Runs Django migrations and creates a superuser.
+   - **Run tests**: Starts the Django development server and uses `curl` to verify that "Hello Potato" is displayed on the homepage.
+
+### 3. Push the Workflow File to GitHub
+
+Add, commit, and push the `.github/workflows/django-ci.yml` file to your GitHub repository:
+
+```bash
+git add .github/workflows/django-ci.yml
+git commit -m "Add GitHub Actions workflow for Django CI"
+git push origin main
+```
+
+This will trigger the GitHub Action, setting up the Django project, and running a basic check to ensure "Hello Potato" is displayed on the homepage.
