@@ -1,0 +1,51 @@
+name: Django CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: potato
+          MYSQL_DATABASE: potato
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: |
+          python -m venv potatovm
+          source potatovm/bin/activate
+          pip install django mysqlclient
+
+      - name: Set up Django
+        run: |
+          source potatovm/bin/activate
+          python manage.py migrate
+          echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'adminpass')" | python manage.py shell
+
+      - name: Run tests
+        run: |
+          source potatovm/bin/activate
+          python manage.py runserver &
+          sleep 10
+          curl -sSf localhost:8000 | grep "Hello Potato"
